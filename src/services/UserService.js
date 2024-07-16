@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const USER_API_BASE_URL = "http://localhost:9090/users";
+const USER_API_BASE_URL = "http://ga-backend-service.default.svc.cluster.local:9090/users";
 
 class UserService {
 

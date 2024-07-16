@@ -28,16 +28,6 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 3000  
-        livenessProbe:           
-          initialDelaySeconds: 5
-          periodSeconds: 15
-          timeoutSeconds: 5
-        readinessProbe:   
-          failureThreshold: 3
-          successThreshold: 1      
-          initialDelaySeconds: 3
-          periodSeconds: 10
-          timeoutSeconds: 5
         lifecycle:
           preStop:
             exec:

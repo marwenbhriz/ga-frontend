@@ -5,33 +5,53 @@ kind: Deployment
 metadata:
   name: ga-frontend          
 spec:
-  replicas: 3                    
+  replicas: 1  
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 100%
+      maxUnavailable: 0     
+  progressDeadlineSeconds: 300        
   selector:
     matchLabels:
-      app: ga-frontend       # This deployment applies to any Pods matching the specified label
-  template:                      # This deployment will create a set of pods using the configurations in this template
+      app: ga-frontend      
+  template:                      
     metadata:
-      labels:                    # The labels that will be applied to all of the pods in this deployment
+      labels:                    
         app: ga-frontend
-    spec:                        # Spec for the container which will run in the Pod
+        component: microservice
+    spec:        
+      terminationGracePeriodSeconds: 1800              
       containers:
       - name: ga-frontend
         image: marbenhriz/ga-frontend:latest
         imagePullPolicy: IfNotPresent
         ports:
-          - containerPort: 9090  
+          - containerPort: 3000  
         livenessProbe:           
           httpGet:
             path: /health
-            port: 9090
+            port: 3000
             scheme: HTTP
           initialDelaySeconds: 5
           periodSeconds: 15
           timeoutSeconds: 5
-        readinessProbe:         
+        readinessProbe:   
+          failureThreshold: 3
+          successThreshold: 1      
           httpGet:
             path: /readiness
-            port: 9090
+            port: 3000
             scheme: HTTP
-          initialDelaySeconds: 5
-          timeoutSeconds: 1 
+          initialDelaySeconds: 3
+          periodSeconds: 10
+          timeoutSeconds: 5
+        lifecycle:
+          preStop:
+            exec:
+              command: [ "/bin/sleep", "20" ]
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits: {}

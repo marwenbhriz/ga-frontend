@@ -16,10 +16,11 @@ COPY . .
 # Build the React app for production
 RUN npm run build
 
-# Stage 2: Serve the built application
-FROM nginx:alpine
+# Expose port 3000 to the outside world
+EXPOSE 3000
 
-COPY --from=build /app/build /usr/share/nginx/html
-EXPOSE 80
+# Set environment variable to serve the app
+ENV NODE_ENV production
 
-CMD ["nginx", "-g", "daemon off;"]
+# Command to run the application
+CMD ["npm", "start"]

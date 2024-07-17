@@ -1,22 +1,26 @@
-FROM node:lts-alpine
+# Use an official Node.js image as the base
+FROM node:14-alpine
 
-# installe un simple serveur http pour servir un contenu statique
-RUN npm install -g http-server
-
-# définit le dossier 'app' comme dossier de travail
+# Set the working directory inside the container
 WORKDIR /app
 
-# copie 'package.json' et 'package-lock.json' (si disponible)
+# Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-# installe les dépendances du projet
+# Install dependencies
 RUN npm install
 
-# copie les fichiers et dossiers du projet dans le dossier de travail (par exemple : le dossier 'app')
+# Copy the entire local directory to the working directory
 COPY . .
 
-# construit l'app pour la production en la minifiant
+# Build the React app for production
 RUN npm run build
 
+# Expose port 3000 to the outside world
 EXPOSE 3000
-CMD [ "http-server", "dist" ]
+
+# Set environment variable to serve the app
+ENV NODE_ENV production
+
+# Command to run the application
+CMD ["npm", "start"]

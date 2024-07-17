@@ -27,7 +27,7 @@ spec:
         image: marbenhriz/ga-frontend:latest
         imagePullPolicy: IfNotPresent
         ports:
-          - containerPort: 3000  
+          - containerPort: 80  
         lifecycle:
           preStop:
             exec:
